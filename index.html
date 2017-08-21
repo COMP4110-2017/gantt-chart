@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Gantt Chart</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <style>
+        #chart_div {
+            margin: 5px auto;
+            width: 95%;
+        }
+    </style>
+</head>
+<body>
+<h1 class="text-center">COMP4110 Gantt Chart</h1>
+
+<div id="chart_div"></div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    var options = {
+        height: 2730,
+        gantt: {
+            labelStyle: {
+                fontName: 'Roboto',
+                fontSize: 14,
+                color: '#757575'
+            },
+            criticalPathEnabled: true,
+            criticalPathStyle: {
+                stroke: '#e64a19',
+                strokeWidth: 5
+            }
+        }
+    };
+
+    var rows = [
+        // Documentation
+        [
+            'literature-review', 'Literature Review', 'Documentation',
+            new Date(2017, 7, 13), new Date(2017, 7, 22), null,
+            100,
+            [
+
+            ].join(',')
+        ],
+
+        // Data
+        [
+            'find-dataset', 'Find Dataset', 'Data',
+            new Date(2017, 7, 13), new Date(2017, 7, 29), null,
+            0,
+            [
+
+            ].join(',')
+        ],
+        [
+            'treat-dataset', 'Treat Dataset', 'Data',
+            new Date(2017, 7, 29), new Date(2017, 8, 5), null,
+            0,
+            [
+                'find-dataset'
+            ].join(',')
+        ],
+        [
+            'train-dataset', 'Train Neural Network', 'Data',
+            new Date(2017, 8, 19), new Date(2017, 9, 3), null,
+            0,
+            [
+                'implement-training-mechanism'
+            ].join(',')
+        ],
+
+        // Development
+        [
+            'implement-training-mechanism', 'Implement Training Mechanism', 'Development',
+            new Date(2017, 7, 29), new Date(2017, 8, 19), null,
+            0,
+            [
+                'find-dataset'
+            ].join(',')
+        ],
+        [
+            'implement-verification-mechanism', 'Implement Verification Mechanism', 'Development',
+            new Date(2017, 7, 29), new Date(2017, 8, 19), null,
+            0,
+            [
+                'find-dataset'
+            ].join(',')
+        ],
+
+        // Analysis
+        [
+            'verify-accuracy', 'Verify Accuracy', 'Analysis',
+            new Date(2017, 9, 3), new Date(2017, 9, 10), null,
+            0,
+            [
+                'implement-verification-mechanism',
+                'train-dataset'
+            ].join(',')
+        ],
+        [
+            'complete-final-report', 'Complete Final Report', 'Development',
+            new Date(2017, 9, 10), new Date(2017, 9, 23), null,
+            0,
+            [
+                'verify-accuracy'
+            ].join(',')
+        ]
+    ];
+
+    google.charts.load('current', {'packages': ['gantt']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function days(days) {
+        return days * 24 * 60 * 60 * 1000;
+    }
+
+    function weeks(weeks) {
+        return weeks * days(7);
+    }
+
+    function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Task ID');
+        data.addColumn('string', 'Task Name');
+        data.addColumn('string', 'Resource');
+        data.addColumn('date', 'Start');
+        data.addColumn('date', 'End');
+        data.addColumn('number', 'Duration');
+        data.addColumn('number', 'Percent Complete');
+        data.addColumn('string', 'Dependencies');
+
+        data.addRows(rows);
+
+        var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+    }
+</script>
+</body>
+</html>
